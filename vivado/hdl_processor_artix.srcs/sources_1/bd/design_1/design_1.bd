@@ -1,0 +1,133 @@
+{
+  "design": {
+    "design_info": {
+      "boundary_crc": "0x0",
+      "device": "xc7a35ticsg324-1L",
+      "gen_directory": "../../../../hdl_processor_artix.gen/sources_1/bd/design_1",
+      "name": "design_1",
+      "rev_ctrl_bd_flag": "RevCtrlBdOff",
+      "synth_flow_mode": "Hierarchical",
+      "tool_version": "2022.2"
+    },
+    "design_tree": {
+      "processor_0": "",
+      "clk_wiz_0": ""
+    },
+    "ports": {
+      "sys_clock": {
+        "type": "clk",
+        "direction": "I",
+        "parameters": {
+          "FREQ_HZ": {
+            "value": "100000000"
+          },
+          "PHASE": {
+            "value": "0.0"
+          }
+        }
+      },
+      "rstn_ext_0": {
+        "direction": "I"
+      }
+    },
+    "components": {
+      "processor_0": {
+        "vlnv": "xilinx.com:module_ref:processor:1.0",
+        "xci_name": "design_1_processor_0_0",
+        "xci_path": "ip\\design_1_processor_0_0\\design_1_processor_0_0.xci",
+        "inst_hier_path": "processor_0",
+        "reference_info": {
+          "ref_type": "hdl",
+          "ref_name": "processor",
+          "boundary_crc": "0x0"
+        },
+        "ports": {
+          "clk": {
+            "type": "clk",
+            "direction": "I"
+          },
+          "rstn_ext": {
+            "direction": "I"
+          },
+          "prog_cnt": {
+            "direction": "O",
+            "left": "4",
+            "right": "0"
+          },
+          "rstn_inter": {
+            "direction": "O"
+          },
+          "acumulator_ce": {
+            "direction": "O"
+          },
+          "reg_file_ce": {
+            "direction": "O"
+          },
+          "instruction_code": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
+          }
+        }
+      },
+      "clk_wiz_0": {
+        "vlnv": "xilinx.com:ip:clk_wiz:6.0",
+        "xci_name": "design_1_clk_wiz_0_0",
+        "xci_path": "ip\\design_1_clk_wiz_0_0\\design_1_clk_wiz_0_0.xci",
+        "inst_hier_path": "clk_wiz_0",
+        "parameters": {
+          "CLKOUT2_JITTER": {
+            "value": "114.829"
+          },
+          "CLKOUT2_PHASE_ERROR": {
+            "value": "98.575"
+          },
+          "CLKOUT2_REQUESTED_OUT_FREQ": {
+            "value": "200.000"
+          },
+          "CLKOUT2_USED": {
+            "value": "true"
+          },
+          "CLK_IN1_BOARD_INTERFACE": {
+            "value": "sys_clock"
+          },
+          "MMCM_CLKOUT1_DIVIDE": {
+            "value": "5"
+          },
+          "NUM_OUT_CLKS": {
+            "value": "2"
+          },
+          "USE_BOARD_FLOW": {
+            "value": "true"
+          },
+          "USE_LOCKED": {
+            "value": "false"
+          },
+          "USE_RESET": {
+            "value": "false"
+          }
+        }
+      }
+    },
+    "nets": {
+      "clk_wiz_0_clk_out1": {
+        "ports": [
+          "clk_wiz_0/clk_out1",
+          "processor_0/clk"
+        ]
+      },
+      "rstn_ext_0_1": {
+        "ports": [
+          "rstn_ext_0",
+          "processor_0/rstn_ext"
+        ]
+      },
+      "sys_clock_1": {
+        "ports": [
+          "sys_clock",
+          "clk_wiz_0/clk_in1"
+        ]
+      }
+    }
+  }
+}

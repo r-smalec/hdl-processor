@@ -1,27 +1,31 @@
+// instruction's bits:
+//  15, 14, 13, 12,     11, ... 8,      7,  ... 0
+//          R1  R0      instr code      data
+
 module rom_mem #(
-    parameter CELL00 = 8'b0000_0000,
-    parameter CELL01 = 8'b0000_0000,
-    parameter CELL02 = 8'b0000_0000,
-    parameter CELL03 = 8'b0000_0000,
+    parameter CELL00 = 16'b0000_0000_0000_0000,
+    parameter CELL01 = 16'b0000_0000_0000_0000,
+    parameter CELL02 = 16'b0000_0000_0000_0000,
+    parameter CELL03 = 16'b0000_0000_0000_0000,
 
-    parameter CELL04 = 8'b0000_0000,
-    parameter CELL05 = 8'b0000_0000,
-    parameter CELL06 = 8'b0000_0000,
-    parameter CELL07 = 8'b0000_0000,
+    parameter CELL04 = 16'b0000_0000_0000_0000,
+    parameter CELL05 = 16'b0000_0000_0000_0000,
+    parameter CELL06 = 16'b0000_0000_0000_0000,
+    parameter CELL07 = 16'b0000_0000_0000_0000,
     
-    parameter CELL08 = 8'b0000_0000,
-    parameter CELL09 = 8'b0000_0000,
-    parameter CELL10 = 8'b0000_0000,
-    parameter CELL11 = 8'b0000_0000,
+    parameter CELL08 = 16'b0000_0000_0000_0000,
+    parameter CELL09 = 16'b0000_0000_0000_0000,
+    parameter CELL10 = 16'b0000_0000_0000_0000,
+    parameter CELL11 = 16'b0000_0000_0000_0000,
 
-    parameter CELL12 = 8'b0000_0000,
-    parameter CELL13 = 8'b0000_0000,
-    parameter CELL14 = 8'b0000_0000,
-    parameter CELL15 = 8'b0000_0000
+    parameter CELL12 = 16'b0000_0000_0000_0000,
+    parameter CELL13 = 16'b0000_0000_0000_0000,
+    parameter CELL14 = 16'b0000_0000_0000_0000,
+    parameter CELL15 = 16'b0000_0000_0000_0000
 ) (
     input               oe,
     input      [4:0]    addr,
-    output reg [7:0]    cell_data
+    output reg [15:0]   cell_data
 );
 
     always @ (*) begin
@@ -47,11 +51,11 @@ module rom_mem #(
                 5'd14:  cell_data <= CELL14;
                 5'd15:  cell_data <= CELL15;
 
-                default:cell_data <= 8'd0;
+                default:cell_data <= 16'd0;
             endcase
         end
         else
-            cell_data <= 8'd0;
+            cell_data <= 16'd0;
     end
 
 endmodule
