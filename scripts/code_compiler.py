@@ -3,7 +3,7 @@
 #          R1  R0      instr code      data
 
 input_file_path = "code.asm"
-output_file_path = "machine.code"
+output_file_path = "code.machine"
 
 def r0_or_r1(reg, act_line_no):
     if      reg == "R0":
