@@ -14,7 +14,7 @@ module alu(
 );
 
 always @ (*) begin
-    case(alu_instruction_code)
+    case(instr_code)
         `NOT:   alu_result <= ~acumulator;
         `XOR:   alu_result <= acumulator ^ reg_file;
         `OR:    alu_result <= acumulator | reg_file;

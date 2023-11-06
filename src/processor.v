@@ -1,31 +1,54 @@
+`include "instructions.v"
+
 `include "counter.v"
 `include "rom_mem.v"
 `include "instruction_decoder.v"
-`include "instructions.v"
+`include "alu.v"
 
 module processor (
     input           clk,
     input           rstn_ext,
 
-    output [4:0]    prog_cnt,
-    output          rstn_inter,
-    output          acumulator_ce,
-    output          reg_file_ce,
-    output [7:0]    instruction_code
+    output [4:0]    prog_cnt_dbg,
+    output          rstn_inter_dbg,
+    output          load_en_dbg, 
+    output          store_en_dbg,
+    output     	    R0_ce_dbg, 
+    output          R1_ce_dbg,
+    output 	        R0_oe_dbg, 
+    output          R1_oe_dbg,
+    output [7:0]    R0_dbg,
+    output [7:0]    R1_dbg,
+    output [7:0]	reg_file_dbg
 );
 
 wire            rstn;
 wire            counter_ce;
 
-assign rstn = rstn_ext && rstn_inter;
-assign counter_ce = 1'b1;
+wire            rstn_inter;
+wire		    load_en; 
+wire		    store_en; 
 
-reg		load_en; 
-reg		store_en; 
-
-wire    [3:0]	instr_code; 
-wire    [7:0]   prog_data;
+wire    [4:0]   prog_cnt;
+wire    [15:0]  cell_data;
+wire    [3:0]	instr_code;
+wire    [7:0]   prog_mem_data;
 wire    [7:0]   alu_result;
+
+assign  rstn_inter_dbg = rstn_inter;
+assign  prog_cnt_dbg = prog_cnt;
+assign  load_en_dbg = load_en; 
+assign  store_en_dbg = store_en;
+assign  R0_ce_dbg = R0_ce;
+assign  R1_ce_dbg = R1_ce;
+assign  R0_oe_dbg = R0_oe;
+assign  R1_oe_dbg = R1_oe;
+assign  R0_dbg = R0;
+assign  R1_dbg = R1;
+assign  reg_file_dbg = reg_file;
+
+assign  rstn = rstn_ext && rstn_inter;
+assign  counter_ce = 1'b1;
 
 //////// Flags ////////
 wire            flag_z;     // Zero flag
@@ -40,8 +63,8 @@ reg	    [7:0]	ACU;
 //////// Register file ////////
 wire		    R0_ce; 
 wire	        R1_ce;
-wire		    R0_en; 
-wire	        R1_en; 
+wire		    R0_oe; 
+wire	        R1_oe;
 reg     [7:0]   R0;
 reg     [7:0]   R1;
 reg 	[7:0]	reg_file; 
@@ -53,21 +76,21 @@ always @ (posedge clk) begin
     else if(store_en && R1_ce && !R0_ce)
         R1 <= ACU;
     else begin
-        R0 <= 1'b0;
-        R1 <= 1'b0;
+        R0 <= R0;
+        R1 <= R1;
     end
 
     if(load_en)
-        ACU <= prog_data;
+        ACU <= prog_mem_data;
     else
-        ACU <= ACU;
+        ACU <= alu_result;
 end
 
 always @ (*) begin
 
-    if(R0_en && !R1_en)
+    if(R0_oe && !R1_oe)
         reg_file <= R0;
-    else if(R0_en && !R1_en)
+    else if(R0_oe && !R1_oe)
         reg_file <= R1;
     else
         reg_file <= reg_file;
@@ -81,26 +104,30 @@ counter counter_0(
     .cnt(prog_cnt)
 );
 
+// instruction's bits:
+//  15, 14, 13, 12,     11, ... 8,      7,  ... 0
+//          R1  R0      instr code      data
+
 rom_mem #(
-    .CELL00(16'b0000_0000_0000_0000),
-    .CELL01(16'b0000_0000_0000_0000),
-    .CELL02(16'b0000_0000_0000_0000),
-    .CELL03(16'b0000_0000_0000_0000),
+    .CELL00(16'b0000_1100_0000_0000),
+    .CELL01(16'b0000_1100_0000_0000),
+    .CELL02(16'b0000_1010_0000_0101),
+    .CELL03(16'b0000_1100_0000_0000),
 
-    .CELL04(16'b0000_0000_0000_0000),
-    .CELL05(16'b0000_0000_0000_0000),
-    .CELL06(16'b0000_0000_0000_0000),
-    .CELL07(16'b0000_0000_0000_0000),
+    .CELL04(16'b0000_1100_0000_0000),
+    .CELL05(16'b0000_1100_0000_0000),
+    .CELL06(16'b0000_1100_0000_0000),
+    .CELL07(16'b0000_1100_0000_0000),
 
-    .CELL08(16'b0000_0000_0000_0000),
-    .CELL09(16'b0000_0000_0000_0000),
-    .CELL10(16'b0000_0000_0000_0000),
-    .CELL11(16'b0000_0000_0000_0000),
+    .CELL08(16'b0000_1100_0000_0000),
+    .CELL09(16'b0000_1100_0000_0000),
+    .CELL10(16'b0000_1100_0000_0000),
+    .CELL11(16'b0000_1100_0000_0000),
 
-    .CELL12(16'b0000_0000_0000_0000),
-    .CELL13(16'b0000_0000_0000_0000),
-    .CELL14(16'b0000_0000_0000_0000),
-    .CELL15(16'b0000_0000_0000_0000)
+    .CELL12(16'b0000_1100_0000_0000),
+    .CELL13(16'b0000_1100_0000_0000),
+    .CELL14(16'b0000_1100_0000_0000),
+    .CELL15(16'b0000_1100_0000_0000)
 ) rom_mem_0 (
     .oe(rstn),
     .addr(prog_cnt),
@@ -111,13 +138,15 @@ rom_mem #(
 instruction_decoder instruction_decoder_0 (
 	.cell_data(cell_data), 
 
-	.rstn(rstn), 
+	.rstn(rstn_inter), 
 	.load_en(load_en), 
 	.store_en(store_en), 
 	.R0_ce(R0_ce), 
-	.R1_ce(R1_ce), 
+	.R1_ce(R1_ce),
+    .R0_oe(R0_oe),
+    .R1_oe(R1_oe),
 	.instr_code(instr_code),
-    .prog_data(prog_data)
+    .prog_mem_data(prog_mem_data)
 );
 
 alu alu_0 (

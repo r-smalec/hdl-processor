@@ -1,7 +1,3 @@
-// instruction's bits:
-//  15, 14, 13, 12,     11, ... 8,      7,  ... 0
-//          R1  R0      instr code      data
-
 module rom_mem #(
     parameter CELL00 = 16'b0000_0000_0000_0000,
     parameter CELL01 = 16'b0000_0000_0000_0000,
@@ -25,6 +21,7 @@ module rom_mem #(
 ) (
     input               oe,
     input      [4:0]    addr,
+    
     output reg [15:0]   cell_data
 );
 

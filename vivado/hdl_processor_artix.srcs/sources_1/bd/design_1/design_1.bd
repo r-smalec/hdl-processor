@@ -10,8 +10,8 @@
       "tool_version": "2022.2"
     },
     "design_tree": {
-      "processor_0": "",
-      "clk_wiz_0": ""
+      "clk_wiz_0": "",
+      "processor_0": ""
     },
     "ports": {
       "sys_clock": {
@@ -31,45 +31,6 @@
       }
     },
     "components": {
-      "processor_0": {
-        "vlnv": "xilinx.com:module_ref:processor:1.0",
-        "xci_name": "design_1_processor_0_0",
-        "xci_path": "ip\\design_1_processor_0_0\\design_1_processor_0_0.xci",
-        "inst_hier_path": "processor_0",
-        "reference_info": {
-          "ref_type": "hdl",
-          "ref_name": "processor",
-          "boundary_crc": "0x0"
-        },
-        "ports": {
-          "clk": {
-            "type": "clk",
-            "direction": "I"
-          },
-          "rstn_ext": {
-            "direction": "I"
-          },
-          "prog_cnt": {
-            "direction": "O",
-            "left": "4",
-            "right": "0"
-          },
-          "rstn_inter": {
-            "direction": "O"
-          },
-          "acumulator_ce": {
-            "direction": "O"
-          },
-          "reg_file_ce": {
-            "direction": "O"
-          },
-          "instruction_code": {
-            "direction": "O",
-            "left": "7",
-            "right": "0"
-          }
-        }
-      },
       "clk_wiz_0": {
         "vlnv": "xilinx.com:ip:clk_wiz:6.0",
         "xci_name": "design_1_clk_wiz_0_0",
@@ -105,6 +66,67 @@
           },
           "USE_RESET": {
             "value": "false"
+          }
+        }
+      },
+      "processor_0": {
+        "vlnv": "xilinx.com:module_ref:processor:1.0",
+        "xci_name": "design_1_processor_0_0",
+        "xci_path": "ip\\design_1_processor_0_0\\design_1_processor_0_0.xci",
+        "inst_hier_path": "processor_0",
+        "reference_info": {
+          "ref_type": "hdl",
+          "ref_name": "processor",
+          "boundary_crc": "0x0"
+        },
+        "ports": {
+          "clk": {
+            "type": "clk",
+            "direction": "I"
+          },
+          "rstn_ext": {
+            "direction": "I"
+          },
+          "prog_cnt_dbg": {
+            "direction": "O",
+            "left": "4",
+            "right": "0"
+          },
+          "rstn_inter_dbg": {
+            "direction": "O"
+          },
+          "load_en_dbg": {
+            "direction": "O"
+          },
+          "store_en_dbg": {
+            "direction": "O"
+          },
+          "R0_ce_dbg": {
+            "direction": "O"
+          },
+          "R1_ce_dbg": {
+            "direction": "O"
+          },
+          "R0_en_dbg": {
+            "direction": "O"
+          },
+          "R1_en_dbg": {
+            "direction": "O"
+          },
+          "R0_dbg": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
+          },
+          "R1_dbg": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
+          },
+          "reg_file_dbg": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
           }
         }
       }
