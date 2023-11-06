@@ -16,11 +16,14 @@ wire		    load_en_dbg;
 wire		    store_en_dbg; 
 wire		    R0_ce_dbg; 
 wire		    R1_ce_dbg; 
-wire		    R0_en_dbg; 
-wire		    R1_en_dbg; 
+wire		    R0_oe_dbg; 
+wire		    R1_oe_dbg; 
 wire	[7:0]	R0_dbg; 
 wire	[7:0]	R1_dbg; 
-wire	[7:0]	reg_file_dbg; 
+wire	[7:0]	reg_file_dbg;
+wire    [3:0]   instr_code_dbg;
+wire    [7:0]   prog_mem_data_dbg;
+
 
 processor UUT (
 	.clk								(clk), 
@@ -31,11 +34,13 @@ processor UUT (
 	.store_en_dbg						(store_en_dbg), 
 	.R0_ce_dbg							(R0_ce_dbg), 
 	.R1_ce_dbg							(R1_ce_dbg), 
-	.R0_en_dbg							(R0_en_dbg), 
-	.R1_en_dbg							(R1_en_dbg), 
+	.R0_oe_dbg							(R0_oe_dbg), 
+	.R1_oe_dbg							(R1_oe_dbg), 
 	.R0_dbg								(R0_dbg), 
 	.R1_dbg								(R1_dbg), 
-	.reg_file_dbg						(reg_file_dbg) 
+	.reg_file_dbg						(reg_file_dbg),
+    .instr_code_dbg                     (instr_code_dbg),
+    .prog_mem_data_dbg                  (prog_mem_data_dbg)
 
 );
 

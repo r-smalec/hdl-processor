@@ -19,7 +19,9 @@ module processor (
     output          R1_oe_dbg,
     output [7:0]    R0_dbg,
     output [7:0]    R1_dbg,
-    output [7:0]	reg_file_dbg
+    output [7:0]	reg_file_dbg,
+    output [3:0]    instr_code_dbg,
+    output [7:0]    prog_mem_data_dbg
 );
 
 wire            rstn;
@@ -46,6 +48,8 @@ assign  R1_oe_dbg = R1_oe;
 assign  R0_dbg = R0;
 assign  R1_dbg = R1;
 assign  reg_file_dbg = reg_file;
+assign  instr_code_dbg = instr_code;
+assign  prog_mem_data_dbg = prog_mem_data;
 
 assign  rstn = rstn_ext && rstn_inter;
 assign  counter_ce = 1'b1;
@@ -109,25 +113,22 @@ counter counter_0(
 //          R1  R0      instr code      data
 
 rom_mem #(
-    .CELL00(16'b0000_1100_0000_0000),
-    .CELL01(16'b0000_1100_0000_0000),
-    .CELL02(16'b0000_1010_0000_0101),
-    .CELL03(16'b0000_1100_0000_0000),
-
-    .CELL04(16'b0000_1100_0000_0000),
-    .CELL05(16'b0000_1100_0000_0000),
-    .CELL06(16'b0000_1100_0000_0000),
-    .CELL07(16'b0000_1100_0000_0000),
-
-    .CELL08(16'b0000_0000_0000_0000),
-    .CELL09(16'b0000_0000_0000_0000),
-    .CELL10(16'b0000_0000_0000_0000),
-    .CELL11(16'b0000_0000_0000_0000),
-
-    .CELL12(16'b0000_0000_0000_0000),
-    .CELL13(16'b0000_0000_0000_0000),
-    .CELL14(16'b0000_0000_0000_0000),
-    .CELL15(16'b0000_0000_0000_0000)
+    .CELL00(16'b0000_1100_0000_0000), // NOP
+    .CELL01(16'b0000_1010_0000_0101), // LD 5
+    .CELL02(16'b0001_1011_0000_0000), // ST R0
+    .CELL03(16'b0001_0101_0000_0010), // ADD R0 2
+    .CELL04(16'b0000_1100_0000_0000), // NOP
+    .CELL05(16'b0000_1100_0000_0000), // NOP
+    .CELL06(16'b0000_1100_0000_0000), // NOP
+    .CELL07(16'b0000_1100_0000_0000), // NOP
+    .CELL08(16'b0000_1100_0000_0000), // NOP
+    .CELL09(16'b0000_1100_0000_0000), // NOP
+    .CELL10(16'b0000_1100_0000_0000), // NOP
+    .CELL11(16'b0000_1100_0000_0000), // NOP
+    .CELL12(16'b0000_1100_0000_0000), // NOP
+    .CELL13(16'b0000_1100_0000_0000), // NOP
+    .CELL14(16'b0000_1100_0000_0000), // NOP
+    .CELL15(16'b0000_1100_0000_0000)  // NOP
 ) rom_mem_0 (
     .oe(rstn),
     .addr(prog_cnt),
@@ -151,7 +152,7 @@ instruction_decoder instruction_decoder_0 (
 
 alu alu_0 (
 	.instr_code(instr_code), 
-	.in_data(in_data), 
+	.in_data(prog_mem_data), 
 	.reg_file(reg_file), 
 
     .alu_result(alu_result),
