@@ -2,7 +2,7 @@
 
 module alu(
     input       [3:0]   instr_code,
-    input       [7:0]   acumulator,
+    input       [7:0]   in_data,
     input       [7:0]   reg_file,
 
     output reg  [7:0]   alu_result,
@@ -15,16 +15,16 @@ module alu(
 
 always @ (*) begin
     case(instr_code)
-        `NOT:   alu_result <= ~acumulator;
-        `XOR:   alu_result <= acumulator ^ reg_file;
-        `OR:    alu_result <= acumulator | reg_file;
-        `AND:   alu_result <= acumulator & reg_file;
-        `SUB:   alu_result <= acumulator - reg_file;
-        `ADD:   {flag_cy, alu_result} <= acumulator + reg_file;
-        `RR:    alu_result <= acumulator >> 1;
-        `RL:    alu_result <= acumulator << 1;
-        `DEC:   alu_result <= acumulator - 1;
-        `INC:   alu_result <= acumulator + 1;
+        `NOT:   alu_result <= ~in_data;
+        `XOR:   alu_result <= in_data ^ reg_file;
+        `OR:    alu_result <= in_data | reg_file;
+        `AND:   alu_result <= in_data & reg_file;
+        `SUB:   alu_result <= in_data - reg_file;
+        `ADD:   {flag_cy, alu_result} <= in_data + reg_file;
+        `RR:    alu_result <= in_data >> 1;
+        `RL:    alu_result <= in_data << 1;
+        `DEC:   alu_result <= in_data - 1;
+        `INC:   alu_result <= in_data + 1;
     endcase
 
     flag_z <= alu_result == 0 ? 1'b1 : 1'b0;
