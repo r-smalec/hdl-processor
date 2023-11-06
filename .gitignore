@@ -1,0 +1,6 @@
+vivado/*.sim
+vivado/*.runs
+vivado/*.cache
+vivado/*.gen
+vivado/*.log
+vivado/*.jou
