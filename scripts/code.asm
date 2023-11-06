@@ -1,0 +1,9 @@
+NOP
+LD 5
+ST R0
+LD 8
+ST R1
+ADD R0 2
+INC 4
+ST R1
+RST
