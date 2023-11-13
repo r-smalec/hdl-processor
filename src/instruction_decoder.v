@@ -10,17 +10,17 @@ module instruction_decoder (
     output reg          R1_ce,
     output reg          R0_oe,
     output reg          R1_oe,
-    output      [3:0]   instr_code,
+    output      [5:0]   instr_code,
     output      [7:0]   prog_mem_data
 );
 
 
-assign instr_code = cell_data[11:8];
+assign instr_code = cell_data[13:8];
 assign prog_mem_data = cell_data[7:0];
 
 always @ (*) begin
     
-    case (cell_data[11:8])
+    case (cell_data[13:8])
         
         `RST:       begin
             rstn <= 1'b0;
@@ -39,8 +39,8 @@ always @ (*) begin
             store_en <= 1'b0;
 
             // load to register (R0 or R1) from acumulator
-            R0_ce <= cell_data[12];
-            R1_ce <= cell_data[13];
+            R0_ce <= cell_data[14];
+            R1_ce <= cell_data[15];
             R0_oe <= 1'b0;
             R1_oe <= 1'b0;
         end
@@ -51,8 +51,8 @@ always @ (*) begin
             store_en <= 1'b1;
 
             // load to register (R0 or R1) from instruction data
-            R0_ce <= cell_data[12];
-            R1_ce <= cell_data[13];
+            R0_ce <= cell_data[14];
+            R1_ce <= cell_data[15];
             R0_oe <= 1'b0;
             R1_oe <= 1'b0;
         end
@@ -65,8 +65,8 @@ always @ (*) begin
             // take data from register (R0 or R1) and data from acumulator to computation in alu
             R0_ce <= 1'b0;
             R1_ce <= 1'b0;
-            R0_oe <= cell_data[12];
-            R1_oe <= cell_data[13];
+            R0_oe <= cell_data[14];
+            R1_oe <= cell_data[15];
         end
 
     endcase

@@ -1,19 +1,19 @@
 // instructions and its codes
 
-`define NOT     4'b0000
-`define XOR     4'b0001
-`define OR      4'b0010
-`define AND     4'b0011
+`define NOT     4'b000000
+`define XOR     4'b000001
+`define OR      4'b000010
+`define AND     4'b000011
 
-`define SUB     4'b0100
-`define ADD     4'b0101
-`define RR      4'b0110
-`define RL      4'b0111
+`define SUB     4'b000100
+`define ADD     4'b000101
+`define RR      4'b000110
+`define RL      4'b000111
 
-`define DEC     4'b1000
-`define INC     4'b1001
-`define LD      4'b1010
-`define ST      4'b1011
+`define DEC     4'b001000
+`define INC     4'b001001
+`define LD      4'b001010
+`define ST      4'b001011
 
-`define NOP     4'b1100
-`define RST     4'b1111
+`define NOP     4'b111100
+`define RST     4'b111111

@@ -21,6 +21,8 @@ wire		    R1_oe_dbg;
 wire	[7:0]	R0_dbg; 
 wire	[7:0]	R1_dbg; 
 wire	[7:0]	reg_file_dbg;
+wire	[7:0]	ACU_dbg;	
+wire	[7:0]	alu_result_dbg;
 wire    [3:0]   instr_code_dbg;
 wire    [7:0]   prog_mem_data_dbg;
 
@@ -39,6 +41,8 @@ processor UUT (
 	.R0_dbg								(R0_dbg), 
 	.R1_dbg								(R1_dbg), 
 	.reg_file_dbg						(reg_file_dbg),
+	.ACU_dbg							(ACU_dbg),
+	.alu_result_dbg						(alu_result_dbg),
     .instr_code_dbg                     (instr_code_dbg),
     .prog_mem_data_dbg                  (prog_mem_data_dbg)
 

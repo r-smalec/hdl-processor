@@ -107,10 +107,10 @@
           "R1_ce_dbg": {
             "direction": "O"
           },
-          "R0_en_dbg": {
+          "R0_oe_dbg": {
             "direction": "O"
           },
-          "R1_en_dbg": {
+          "R1_oe_dbg": {
             "direction": "O"
           },
           "R0_dbg": {
@@ -124,6 +124,26 @@
             "right": "0"
           },
           "reg_file_dbg": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
+          },
+          "ACU_dbg": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
+          },
+          "alu_result_dbg": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
+          },
+          "instr_code_dbg": {
+            "direction": "O",
+            "left": "3",
+            "right": "0"
+          },
+          "prog_mem_data_dbg": {
             "direction": "O",
             "left": "7",
             "right": "0"

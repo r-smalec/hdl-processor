@@ -20,6 +20,8 @@ module processor (
     output [7:0]    R0_dbg,
     output [7:0]    R1_dbg,
     output [7:0]	reg_file_dbg,
+    output [7:0]    ACU_dbg,
+    output [7:0]    alu_result_dbg,
     output [3:0]    instr_code_dbg,
     output [7:0]    prog_mem_data_dbg
 );
@@ -33,26 +35,9 @@ wire		    store_en;
 
 wire    [4:0]   prog_cnt;
 wire    [15:0]  cell_data;
-wire    [3:0]	instr_code;
+wire    [5:0]	instr_code;
 wire    [7:0]   prog_mem_data;
 wire    [7:0]   alu_result;
-
-assign  rstn_inter_dbg = rstn_inter;
-assign  prog_cnt_dbg = prog_cnt;
-assign  load_en_dbg = load_en; 
-assign  store_en_dbg = store_en;
-assign  R0_ce_dbg = R0_ce;
-assign  R1_ce_dbg = R1_ce;
-assign  R0_oe_dbg = R0_oe;
-assign  R1_oe_dbg = R1_oe;
-assign  R0_dbg = R0;
-assign  R1_dbg = R1;
-assign  reg_file_dbg = reg_file;
-assign  instr_code_dbg = instr_code;
-assign  prog_mem_data_dbg = prog_mem_data;
-
-assign  rstn = rstn_ext && rstn_inter;
-assign  counter_ce = 1'b1;
 
 //////// Flags ////////
 wire            flag_z;     // Zero flag
@@ -72,6 +57,25 @@ wire	        R1_oe;
 reg     [7:0]   R0;
 reg     [7:0]   R1;
 reg 	[7:0]	reg_file; 
+
+assign  rstn_inter_dbg = rstn_inter;
+assign  prog_cnt_dbg = prog_cnt;
+assign  load_en_dbg = load_en; 
+assign  store_en_dbg = store_en;
+assign  R0_ce_dbg = R0_ce;
+assign  R1_ce_dbg = R1_ce;
+assign  R0_oe_dbg = R0_oe;
+assign  R1_oe_dbg = R1_oe;
+assign  R0_dbg = R0;
+assign  R1_dbg = R1;
+assign  reg_file_dbg = reg_file;
+assign  ACU_dbg = ACU;
+assign  alu_result_dbg = alu_result;
+assign  instr_code_dbg = instr_code;
+assign  prog_mem_data_dbg = prog_mem_data;
+
+assign  rstn = rstn_ext && rstn_inter;
+assign  counter_ce = 1'b1;
 
 always @ (posedge clk) begin
 
@@ -109,26 +113,26 @@ counter counter_0(
 );
 
 // instruction's bits:
-//  15, 14, 13, 12,     11, ... 8,      7,  ... 0
-//          R1  R0      instr code      data
+//  15, 14,     13, ... 8,      7,  ... 0
+//  R1  R0      instr code        data
 
 rom_mem #(
-    .CELL00(16'b0000_1100_0000_0000), // NOP
-    .CELL01(16'b0000_1010_0000_0101), // LD 5
-    .CELL02(16'b0001_1011_0000_0000), // ST R0
-    .CELL03(16'b0001_0101_0000_0010), // ADD R0 2
-    .CELL04(16'b0000_1100_0000_0000), // NOP
-    .CELL05(16'b0000_1100_0000_0000), // NOP
-    .CELL06(16'b0000_1100_0000_0000), // NOP
-    .CELL07(16'b0000_1100_0000_0000), // NOP
-    .CELL08(16'b0000_1100_0000_0000), // NOP
-    .CELL09(16'b0000_1100_0000_0000), // NOP
-    .CELL10(16'b0000_1100_0000_0000), // NOP
-    .CELL11(16'b0000_1100_0000_0000), // NOP
-    .CELL12(16'b0000_1100_0000_0000), // NOP
-    .CELL13(16'b0000_1100_0000_0000), // NOP
-    .CELL14(16'b0000_1100_0000_0000), // NOP
-    .CELL15(16'b0000_1100_0000_0000)  // NOP
+	.CELL00(16'b0000_1010_0000_0010), // LD 2
+	.CELL01(16'b0100_1011_0000_0000), // ST R0
+	.CELL02(16'b0100_0100_0000_0101), // SUB R0 5
+	.CELL03(16'b0100_1011_0000_0000), // ST R0
+	.CELL04(16'b0011_1100_0000_0000), // NOP
+	.CELL05(16'b0011_1100_0000_0000), // NOP
+	.CELL06(16'b0011_1100_0000_0000), // NOP
+	.CELL07(16'b0011_1100_0000_0000), // NOP
+	.CELL08(16'b0011_1100_0000_0000), // NOP
+	.CELL09(16'b0011_1100_0000_0000), // NOP
+	.CELL10(16'b0011_1100_0000_0000), // NOP
+	.CELL11(16'b0011_1100_0000_0000), // NOP
+	.CELL12(16'b0011_1100_0000_0000), // NOP
+	.CELL13(16'b0011_1100_0000_0000), // NOP
+	.CELL14(16'b0011_1100_0000_0000), // NOP
+	.CELL15(16'b0011_1100_0000_0000)  // NOP
 ) rom_mem_0 (
     .oe(rstn),
     .addr(prog_cnt),

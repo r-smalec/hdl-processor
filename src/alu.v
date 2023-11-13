@@ -1,7 +1,7 @@
 `include "instructions.v"
 
 module alu(
-    input       [3:0]   instr_code,
+    input       [5:0]   instr_code,
     input       [7:0]   in_data,
     input       [7:0]   reg_file,
 
