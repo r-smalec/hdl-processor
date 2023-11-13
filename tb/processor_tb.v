@@ -1,5 +1,5 @@
 `timescale 1ps/1ps
-`include "../src/processor.v"
+//`include "../src/processor.v"
 
 module processor_tb;
 

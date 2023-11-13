@@ -1,9 +1,8 @@
-`include "instructions.v"
-
-`include "counter.v"
-`include "rom_mem.v"
-`include "instruction_decoder.v"
-`include "alu.v"
+// `include "instructions.v"
+// `include "counter.v"
+// `include "rom_mem.v"
+// `include "instruction_decoder.v"
+// `include "alu.v"
 
 module processor (
     input           clk,
