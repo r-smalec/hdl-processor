@@ -21,22 +21,30 @@ module processor (
     output [7:0]	reg_file_dbg,
     output [7:0]    ACU_dbg,
     output [7:0]    alu_result_dbg,
+    output          cnt_load_dbg,
+    output [4:0]    cnt_val_dbg,
     output [3:0]    instr_code_dbg,
     output [7:0]    prog_mem_data_dbg
 );
 
 wire            rstn;
-wire            counter_ce;
-
 wire            rstn_inter;
-wire		    load_en; 
-wire		    store_en; 
 
 wire    [4:0]   prog_cnt;
+wire            cnt_load;
+wire    [4:0]   cnt_val;
+wire    [4:0]   cnt_store;
+
 wire    [15:0]  cell_data;
 wire    [5:0]	instr_code;
 wire    [7:0]   prog_mem_data;
 wire    [7:0]   alu_result;
+
+wire		    load_en; 
+wire		    store_en; 
+
+wire            jmpf;
+wire            jmpb;
 
 //////// Flags ////////
 wire            flag_z;     // Zero flag
@@ -57,6 +65,7 @@ reg     [7:0]   R0;
 reg     [7:0]   R1;
 reg 	[7:0]	reg_file; 
 
+//////// Debug signals ////////
 assign  rstn_inter_dbg = rstn_inter;
 assign  prog_cnt_dbg = prog_cnt;
 assign  load_en_dbg = load_en; 
@@ -70,12 +79,15 @@ assign  R1_dbg = R1;
 assign  reg_file_dbg = reg_file;
 assign  ACU_dbg = ACU;
 assign  alu_result_dbg = alu_result;
+assign  cnt_load_dbg = cnt_load;
+assign  cnt_val_dbg = cnt_
 assign  instr_code_dbg = instr_code;
 assign  prog_mem_data_dbg = prog_mem_data;
 
+//////// Reset ////////
 assign  rstn = rstn_ext && rstn_inter;
-assign  counter_ce = 1'b1;
 
+//////// Store to file registers ////////
 always @ (posedge clk) begin
 
     if(store_en && R0_ce && !R1_ce)
@@ -86,6 +98,10 @@ always @ (posedge clk) begin
         R0 <= R0;
         R1 <= R1;
     end
+end
+
+//////// Load to acumulator ////////
+always @ (posedge clk) begin
 
     if(load_en)
         ACU <= prog_mem_data;
@@ -93,6 +109,7 @@ always @ (posedge clk) begin
         ACU <= alu_result;
 end
 
+//////// Register file mux ////////
 always @ (*) begin
 
     if(R0_oe && !R1_oe)
@@ -103,12 +120,31 @@ always @ (*) begin
         reg_file <= reg_file;
 end
 
-counter counter_0(
+//////// Jump's program counter modification ////////
+always @ (*) begin
+
+    if(jmpf) begin
+        cnt_load <= 1'b1;
+        cnt_val <= prog_cnt + prog_mem_data;
+    end
+    else if(jmpb) begin
+        cnt_load <= 1'b1;
+        cnt_val <= prog_cnt - prog_mem_data;
+    end
+    else begin
+        cnt_load <= 1'b0;
+        cnt_val <= cnt_val;
+    end
+end
+
+counter program_counter_0(
     .clk(clk),
     .rstn(rstn),
-    .ce(counter_ce),
+    .cnt_load(cnt_load),
+    .cnt_val(cnt_val),
     
-    .cnt(prog_cnt)
+    .cnt(prog_cnt),
+    .cnt_store(cnt_store)
 );
 
 // instruction's bits:
@@ -132,7 +168,7 @@ rom_mem #(
 	.CELL13(16'b0011_1100_0000_0000), // NOP
 	.CELL14(16'b0011_1100_0000_0000), // NOP
 	.CELL15(16'b0011_1100_0000_0000)  // NOP
-) rom_mem_0 (
+) program_memory_0 (
     .oe(rstn),
     .addr(prog_cnt),
 
@@ -144,11 +180,16 @@ instruction_decoder instruction_decoder_0 (
 
 	.rstn(rstn_inter), 
 	.load_en(load_en), 
-	.store_en(store_en), 
+	.store_en(store_en),
+
 	.R0_ce(R0_ce), 
 	.R1_ce(R1_ce),
     .R0_oe(R0_oe),
     .R1_oe(R1_oe),
+
+    .jmpf(jmpf),
+    .jmpb(jmpb),
+
 	.instr_code(instr_code),
     .prog_mem_data(prog_mem_data)
 );
