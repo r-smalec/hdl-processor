@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module rom_mem #(
     parameter CELL00 = 16'b0000_0000_0000_0000,
     parameter CELL01 = 16'b0000_0000_0000_0000,

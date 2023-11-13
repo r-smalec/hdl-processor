@@ -1,11 +1,12 @@
+`timescale 1ns / 1ps
 module counter (
     input               clk,
     input               rstn,
     input               cnt_load,
-    input       [4:0]   cnt_val
+    input       [4:0]   cnt_val,
 
-    output reg  [4:0]   cnt,
-    output reg  [4:0]   cnt_store
+    output reg  [4:0]   cnt_store,
+    output reg  [4:0]   cnt
 );
 
 reg first_cmd;

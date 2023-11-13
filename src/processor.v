@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 // `include "instructions.v"
 // `include "counter.v"
 // `include "rom_mem.v"
@@ -8,8 +9,10 @@ module processor (
     input           clk,
     input           rstn_ext,
 
-    output [4:0]    prog_cnt_dbg,
     output          rstn_inter_dbg,
+    output [4:0]    prog_cnt_dbg,
+    output          cnt_load_dbg,
+    output [4:0]    cnt_val_dbg,
     output          load_en_dbg, 
     output          store_en_dbg,
     output     	    R0_ce_dbg, 
@@ -21,9 +24,7 @@ module processor (
     output [7:0]	reg_file_dbg,
     output [7:0]    ACU_dbg,
     output [7:0]    alu_result_dbg,
-    output          cnt_load_dbg,
-    output [4:0]    cnt_val_dbg,
-    output [3:0]    instr_code_dbg,
+    output [5:0]    instr_code_dbg,
     output [7:0]    prog_mem_data_dbg
 );
 
@@ -31,8 +32,8 @@ wire            rstn;
 wire            rstn_inter;
 
 wire    [4:0]   prog_cnt;
-wire            cnt_load;
-wire    [4:0]   cnt_val;
+reg             cnt_load;
+reg     [4:0]   cnt_val;
 wire    [4:0]   cnt_store;
 
 wire    [15:0]  cell_data;
@@ -68,6 +69,8 @@ reg 	[7:0]	reg_file;
 //////// Debug signals ////////
 assign  rstn_inter_dbg = rstn_inter;
 assign  prog_cnt_dbg = prog_cnt;
+assign  cnt_load_dbg = cnt_load;
+assign  cnt_val_dbg = cnt_val;
 assign  load_en_dbg = load_en; 
 assign  store_en_dbg = store_en;
 assign  R0_ce_dbg = R0_ce;
@@ -79,8 +82,6 @@ assign  R1_dbg = R1;
 assign  reg_file_dbg = reg_file;
 assign  ACU_dbg = ACU;
 assign  alu_result_dbg = alu_result;
-assign  cnt_load_dbg = cnt_load;
-assign  cnt_val_dbg = cnt_
 assign  instr_code_dbg = instr_code;
 assign  prog_mem_data_dbg = prog_mem_data;
 
@@ -137,29 +138,29 @@ always @ (*) begin
     end
 end
 
+//////// Program counter ////////
 counter program_counter_0(
     .clk(clk),
     .rstn(rstn),
     .cnt_load(cnt_load),
     .cnt_val(cnt_val),
     
-    .cnt(prog_cnt),
-    .cnt_store(cnt_store)
+    .cnt_store(cnt_store),
+    .cnt(prog_cnt)
 );
 
+//////// Program ROM memory ////////
 // instruction's bits:
 //  15, 14,     13, ... 8,      7,  ... 0
 //  R1  R0      instr code        data
-
 rom_mem #(
 	.CELL00(16'b0000_1010_0000_0010), // LD 2
 	.CELL01(16'b0100_1011_0000_0000), // ST R0
-	.CELL02(16'b0100_0100_0000_0101), // SUB R0 5
+	.CELL02(16'b0100_0101_0000_0101), // ADD R0 5
 	.CELL03(16'b0100_1011_0000_0000), // ST R0
-	.CELL04(16'b0011_1100_0000_0000), // NOP
+	.CELL04(16'b0000_1100_0000_0100), // JMPF LABEL1
 	.CELL05(16'b0011_1100_0000_0000), // NOP
 	.CELL06(16'b0011_1100_0000_0000), // NOP
-	.CELL07(16'b0011_1100_0000_0000), // NOP
 	.CELL08(16'b0011_1100_0000_0000), // NOP
 	.CELL09(16'b0011_1100_0000_0000), // NOP
 	.CELL10(16'b0011_1100_0000_0000), // NOP
@@ -167,7 +168,8 @@ rom_mem #(
 	.CELL12(16'b0011_1100_0000_0000), // NOP
 	.CELL13(16'b0011_1100_0000_0000), // NOP
 	.CELL14(16'b0011_1100_0000_0000), // NOP
-	.CELL15(16'b0011_1100_0000_0000)  // NOP
+	.CELL15(16'b0011_1100_0000_0000), // NOP
+	.CELL16(16'b0011_1100_0000_0000)  // NOP
 ) program_memory_0 (
     .oe(rstn),
     .addr(prog_cnt),
@@ -175,6 +177,7 @@ rom_mem #(
     .cell_data(cell_data)
 );
 
+//////// Instruction decoder ////////
 instruction_decoder instruction_decoder_0 (
 	.cell_data(cell_data), 
 
@@ -194,6 +197,7 @@ instruction_decoder instruction_decoder_0 (
     .prog_mem_data(prog_mem_data)
 );
 
+//////// Arithmetic logic unit ////////
 alu alu_0 (
 	.instr_code(instr_code), 
 	.in_data(prog_mem_data), 
